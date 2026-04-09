@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erik Sauceda — App Growth Marketer & Solo Founder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-dark:#5B9EF8;
+    --blue-light:#2563EB;
+    --blue-glow-dark:rgba(96,165,250,0.18);
+    --blue-glow-light:rgba(37,99,235,0.1);
+    --blue-border-dark:rgba(96,165,250,0.25);
+    --blue-border-light:rgba(37,99,235,0.22);
+  }
+  [data-theme="dark"]{
+    --bg:#18191D;--bg2:#1F2329;--bg3:#252A30;--bg4:#2B3038;
+    --surface:rgba(255,255,255,0.04);
+    --border:rgba(255,255,255,0.13);
+    --border-hover:rgba(96,165,250,0.45);
+    --text:#F0F4FF;--text-secondary:#A0AECA;--text-tertiary:#94A3BC;
+    --card-bg:#1F2329;--nav-bg:rgba(24,25,29,0.94);
+    --blue:var(--blue-dark);
+    --blue-glow:var(--blue-glow-dark);
+    --blue-border:var(--blue-border-dark);
+    --tag-bg:rgba(96,165,250,0.16);
+    --tag-color:#BAD6FF;
+    --tag-border:rgba(96,165,250,0.22);
+    --stat-color:#D4E8FF;
+    --metric-color:#BAD6FF;
+    --section-label-color:#7BB3FB;
+    --skill-title-color:#BAD6FF;
+    --skill-pill-bg:#2C3545;
+    --skill-pill-border:rgba(160,174,202,0.2);
+    --skill-pill-text:#C8D4E8;
+  }
+  [data-theme="light"]{
+    --bg:#F4F6FA;--bg2:#FFFFFF;--bg3:#EEF1F7;--bg4:#E4E9F2;
+    --surface:rgba(0,0,0,0.025);
+    --border:rgba(0,0,0,0.09);
+    --border-hover:rgba(37,99,235,0.5);
+    --text:#0D1320;--text-secondary:#3D4E66;--text-tertiary:#64748B;
+    --card-bg:#FFFFFF;--nav-bg:rgba(244,246,250,0.92);
+    --blue:var(--blue-light);
+    --blue-glow:var(--blue-glow-light);
+    --blue-border:var(--blue-border-light);
+    --tag-bg:rgba(37,99,235,0.11);
+    --tag-color:#1A46C0;
+    --tag-border:rgba(37,99,235,0.2);
+    --stat-color:#1A46C0;
+    --metric-color:#1A46C0;
+    --section-label-color:#1D56D8;
+    --skill-title-color:#1D56D8;
+    --skill-pill-bg:#E8EDF7;
+    --skill-pill-border:rgba(37,99,235,0.18);
+    --skill-pill-text:#2D3E6B;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+  .ambient{position:fixed;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(96,165,250,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;top:-300px;right:-200px;}
+  .ambient-2{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(96,165,250,0.03) 0%,transparent 70%);pointer-events:none;z-index:0;bottom:0;left:-150px;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:56px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:var(--nav-bg);border-bottom:1px solid var(--border);}
+  .nav-logo{font-size:.95rem;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-.01em;}
+  .nav-logo span{color:var(--blue);}
+  .nav-right{display:flex;align-items:center;gap:2rem;}
+  .nav-links{display:flex;gap:1.75rem;list-style:none;}
+  .nav-links a{font-size:.82rem;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .2s;}
+  .nav-links a:hover{color:var(--blue);}
+  .theme-toggle{width:38px;height:20px;background:var(--bg4);border:1px solid var(--border);border-radius:10px;cursor:pointer;position:relative;transition:all .3s;flex-shrink:0;}
+  .theme-toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:var(--blue);top:2px;left:2px;transition:transform .3s;}
+  [data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
+
+  /* Hero bg image with fade */
+  .hero-bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
+  .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+  .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(24,25,29,0.55) 0%,rgba(24,25,29,0.82) 50%,var(--bg) 85%);}
+  [data-theme="light"] .hero-bg::after{background:linear-gradient(to bottom,rgba(244,246,250,0.45) 0%,rgba(244,246,250,0.8) 50%,var(--bg) 85%);}
+
+  /* Animated mesh gradient — anchored top, behind everything */
+  .mesh-gradient{position:fixed;top:0;left:0;right:0;height:600px;z-index:0;pointer-events:none;overflow:hidden;}
+  .mesh-gradient::before,.mesh-gradient::after{content:'';position:absolute;border-radius:50%;filter:blur(80px);animation:meshMove 10s ease-in-out infinite alternate;}
+  .mesh-gradient::before{width:600px;height:600px;top:-200px;left:-100px;background:radial-gradient(circle,rgba(59,130,246,0.18) 0%,transparent 70%);animation-delay:0s;}
+  .mesh-gradient::after{width:500px;height:500px;top:-150px;right:-80px;background:radial-gradient(circle,rgba(139,92,246,0.14) 0%,transparent 70%);animation-delay:-4s;}
+  .mesh-gradient-mid{position:fixed;top:80px;left:50%;transform:translateX(-50%);width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,0.08) 0%,transparent 70%);filter:blur(60px);animation:meshMove 14s ease-in-out infinite alternate-reverse;pointer-events:none;z-index:0;}
+  @keyframes meshMove{
+    0%{transform:translate(0,0) scale(1);}
+    33%{transform:translate(40px,-30px) scale(1.08);}
+    66%{transform:translate(-30px,20px) scale(0.95);}
+    100%{transform:translate(20px,40px) scale(1.05);}
+  }
+  [data-theme="light"] .mesh-gradient::before{background:radial-gradient(circle,rgba(59,130,246,0.12) 0%,transparent 70%);}
+  [data-theme="light"] .mesh-gradient::after{background:radial-gradient(circle,rgba(139,92,246,0.09) 0%,transparent 70%);}
+  [data-theme="light"] .mesh-gradient-mid{background:radial-gradient(circle,rgba(16,185,129,0.06) 0%,transparent 70%);}
+
+  .hero{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:96px 2rem 1.5rem;}
+  .hero-top{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;margin-bottom:1.75rem;}
+  .hero-left{}
+  .hero-name{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:800;line-height:1;letter-spacing:-.03em;color:var(--text);margin-bottom:1.25rem;}
+  .hero-name .outline{display:block;color:transparent;-webkit-text-stroke:1px var(--blue);paint-order:stroke fill;}
+  [data-theme="light"] .hero-name .outline{-webkit-text-stroke:1px var(--blue-light);}
+  .hero-tagline{font-size:.9rem;color:var(--text-secondary);line-height:1.75;margin-bottom:1.25rem;}
+  .hero-tagline strong{color:var(--text);font-weight:600;}
+  .hero-actions{display:flex;align-items:center;gap:.75rem;}
+
+  /* Hero image — landscape halftone photo */
+  .hero-image-wrap{position:relative;flex-shrink:0;width:480px;}
+  .hero-image-blob{position:absolute;width:110%;height:110%;top:-5%;left:-5%;border-radius:50%;background:radial-gradient(circle,rgba(91,158,248,0.18) 0%,rgba(139,92,246,0.1) 50%,transparent 75%);filter:blur(36px);pointer-events:none;animation:blobPulse 6s ease-in-out infinite alternate;}
+  @keyframes blobPulse{0%{transform:scale(1);}100%{transform:scale(1.08);}}
+  .hero-image-placeholder{position:relative;z-index:1;width:100%;border-radius:12px;overflow:hidden;background:transparent;border:none;display:block;}
+  .hero-image-placeholder img{width:100%;height:auto;display:block;object-fit:contain;}
+  .hero-image-placeholder::after{content:'';position:absolute;bottom:0;left:0;right:0;height:30%;background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none;}
+  .btn-primary{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.25rem;background:var(--blue);color:#fff;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;border-radius:6px;text-decoration:none;transition:all .2s;border:none;cursor:pointer;}
+  .btn-primary:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 6px 20px rgba(96,165,250,.25);}
+  [data-theme="light"] .btn-primary:hover{box-shadow:0 6px 20px rgba(37,99,235,.25);}
+  .social-links{display:flex;gap:.5rem;}
+  .social-link{width:36px;height:36px;border-radius:7px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;transition:all .2s;}
+  .social-link:hover{border-color:var(--border-hover);color:var(--blue);background:var(--blue-glow);transform:translateY(-1px);}
+  .social-link svg{width:16px;height:16px;}
+
+  /* Stats — centered, tighter bottom */
+  .stats-row{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:none;border:1px solid var(--border);border-radius:10px;overflow:hidden;max-width:1100px;margin:0 auto;}
+  .stats-wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 2rem 2rem;}
+  .stat{background:transparent;padding:1.1rem 1.5rem;display:flex;flex-direction:column;align-items:center;text-align:center;border-right:1px solid var(--border);}
+  .stat:last-child{border-right:none;}
+  .stat:hover{background:transparent;}
+  .stat-number{font-size:2rem;font-weight:800;color:var(--stat-color);letter-spacing:-.03em;line-height:1;margin-bottom:.3rem;text-shadow:0 0 20px rgba(96,165,250,0.5),0 0 40px rgba(96,165,250,0.2);}
+  [data-theme="light"] .stat-number{text-shadow:0 0 16px rgba(37,99,235,0.3),0 0 32px rgba(37,99,235,0.12);}
+  .stat-label{font-size:.72rem;color:var(--text-tertiary);}
+
+  /* Scroll reveal */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+  .reveal-delay-1{transition-delay:.1s;}
+  .reveal-delay-2{transition-delay:.2s;}
+  .reveal-delay-3{transition-delay:.3s;}
+
+  /* Card hover lift already on case-card — add smooth transition to all cards */
+  .case-card,.skill-group,.cert-card{transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease;}
+
+  /* Stat counter animation */
+  .mobile-break{display:none;}
+  @keyframes countUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .stat-number{animation:countUp .6s ease both;}
+  .stat:nth-child(1) .stat-number{animation-delay:.1s;}
+  .stat:nth-child(2) .stat-number{animation-delay:.2s;}
+  .stat:nth-child(3) .stat-number{animation-delay:.3s;}
+
+  section{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:3rem 2rem;}
+  .section-header{display:flex;align-items:center;gap:1rem;margin-bottom:.5rem;}
+  .section-label{font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--section-label-color);white-space:nowrap;}
+  .section-line{flex:1;height:1px;background:var(--border);}
+  .section-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;letter-spacing:-.025em;color:var(--text);margin-bottom:.4rem;}
+  .section-sub{font-size:.875rem;color:var(--text-secondary);line-height:1.7;margin-bottom:1.75rem;}
+
+  /* 3-col cards */
+  .cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+  .case-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .3s,box-shadow .2s,transform .2s;display:flex;flex-direction:column;cursor:pointer;}
+  .case-card:hover{border-color:var(--border-hover);box-shadow:0 0 24px var(--blue-glow);transform:translateY(-2px);}
+  .case-img{position:relative;height:160px;overflow:hidden;flex-shrink:0;}
+  .case-img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+  .case-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 10%,var(--card-bg) 100%);}
+  .case-img-text{position:absolute;bottom:0;left:0;right:0;padding:.85rem 1.25rem;z-index:2;}
+  .case-number{font-size:.62rem;font-weight:700;color:#BAD6FF;letter-spacing:.1em;margin-bottom:.25rem;text-shadow:0 1px 8px rgba(0,0,0,.9);}
+  .case-company{font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:.25rem;text-shadow:0 1px 8px rgba(0,0,0,.9);}
+  .case-title{font-size:.95rem;font-weight:700;color:#fff;line-height:1.25;text-shadow:0 1px 10px rgba(0,0,0,.95);}
+  .case-body{padding:.85rem 1.25rem;flex:1;}
+  .case-tagline{font-size:.78rem;color:var(--text-secondary);line-height:1.65;margin-bottom:.8rem;}
+  .case-tags{display:flex;flex-wrap:wrap;gap:.3rem;}
+  .tag{font-size:.62rem;font-weight:500;padding:.18rem .5rem;border-radius:4px;background:var(--tag-bg);color:var(--tag-color);border:1px solid var(--tag-border);}
+  .case-metrics{display:flex;justify-content:space-between;padding:.75rem 1.25rem;border-top:1px solid var(--border);}
+  .case-metric{text-align:center;flex:1;}
+  .case-metric-value{font-size:.95rem;font-weight:800;color:var(--metric-color);letter-spacing:-.02em;line-height:1;}
+  .case-metric-label{font-size:.58rem;color:var(--text-tertiary);margin-top:.15rem;}
+  .case-toggle-btn{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.25rem;background:transparent;border:none;border-top:1px solid var(--border);color:var(--text-tertiary);font-family:'Inter',sans-serif;font-size:.72rem;font-weight:500;cursor:pointer;transition:color .2s;width:100%;}
+  .case-toggle-btn:hover{color:var(--blue);}
+  .toggle-icon{font-size:1.1rem;font-weight:300;line-height:1;flex-shrink:0;}
+
+  /* Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .25s ease;backdrop-filter:blur(6px);}
+  .modal-overlay.visible{opacity:1;pointer-events:all;}
+  .modal{background:var(--card-bg);border:1px solid var(--blue-border);border-radius:16px;width:100%;max-width:720px;max-height:88vh;overflow-y:auto;transform:translateY(20px) scale(.97);transition:transform .3s ease;box-shadow:0 32px 80px rgba(0,0,0,.5);}
+  .modal-overlay.visible .modal{transform:translateY(0) scale(1);}
+  .modal-header{position:relative;height:200px;overflow:hidden;border-radius:16px 16px 0 0;flex-shrink:0;}
+  .modal-header img{width:100%;height:100%;object-fit:cover;}
+  .modal-header::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,rgba(0,0,0,.7) 100%);}
+  .modal-header-text{position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1.75rem;z-index:2;}
+  .modal-num{font-size:.65rem;font-weight:700;color:#BAD6FF;letter-spacing:.12em;margin-bottom:.3rem;text-shadow:0 1px 6px rgba(0,0,0,.8);}
+  .modal-company{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.35rem;text-shadow:0 1px 6px rgba(0,0,0,.8);}
+  .modal-title{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.2;text-shadow:0 2px 12px rgba(0,0,0,.9);}
+  .modal-close{position:absolute;top:1rem;right:1rem;z-index:3;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.25);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;padding:0;}
+  .modal-close:hover{background:rgba(0,0,0,.85);}
+  .modal-close svg{width:14px;height:14px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;}
+  .modal-body{padding:1.75rem;}
+  .modal-metrics{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+  .modal-metric{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;flex:1;min-width:90px;text-align:center;}
+  .modal-metric-value{font-size:1.25rem;font-weight:800;color:var(--metric-color);letter-spacing:-.02em;line-height:1;margin-bottom:.2rem;}
+  .modal-metric-label{font-size:.65rem;color:var(--text-tertiary);}
+  .modal-section{margin-bottom:1.4rem;}
+  .modal-section:last-child{margin-bottom:0;}
+  .modal-section-label{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--section-label-color);margin-bottom:.5rem;}
+  .modal-section-text{font-size:.875rem;color:var(--text-secondary);line-height:1.8;}
+
+  /* Image placeholders — 16:9 aspect ratio */
+  .modal-img-pair{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem;}
+  .modal-img-single{margin-top:1rem;}
+  .img-16-9{position:relative;width:100%;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:var(--bg3);border:1px solid var(--border);}
+  .img-16-9 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+
+  /* Results grid — 2 cols, 3rd item centered */
+  .modal-results{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin-top:.75rem;}
+  .modal-result{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;text-align:center;}
+  .modal-result-value{font-size:1.2rem;font-weight:800;color:var(--metric-color);letter-spacing:-.02em;line-height:1;margin-bottom:.2rem;}
+  .modal-result-label{font-size:.65rem;color:var(--text-tertiary);line-height:1.35;}
+  /* When there are exactly 3 result items, center the last one */
+  .modal-results.three-items .modal-result:last-child{grid-column:1/-1;max-width:50%;margin:0 auto;width:100%;}
+
+  /* Skills */
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;}
+  .skill-group{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem;transition:border-color .2s;}
+  .skill-group:hover{border-color:var(--border-hover);}
+  .skill-group-title{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--skill-title-color);margin-bottom:.75rem;}
+  .skill-pills{display:flex;flex-wrap:wrap;gap:.4rem;}
+  .skill-pill{font-size:.72rem;font-weight:500;padding:.32rem .7rem;border-radius:5px;background:var(--skill-pill-bg);border:1px solid var(--skill-pill-border);color:var(--skill-pill-text);transition:all .2s;letter-spacing:.01em;}
+  .skill-pill:hover{border-color:var(--border-hover);color:var(--blue);background:var(--blue-glow);transform:translateY(-1px);}
+
+  /* Certs */
+  .certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;}
+  .cert-card{background:var(--card-bg);border:1px solid var(--border);border-radius:9px;padding:.9rem 1.1rem;transition:all .2s;display:flex;align-items:center;gap:.85rem;}
+  .cert-card:hover{border-color:var(--border-hover);transform:translateY(-1px);box-shadow:0 4px 16px var(--blue-glow);}
+  .cert-icon{width:28px;height:28px;border-radius:6px;background:var(--blue-glow);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0;}
+  .cert-icon svg{width:13px;height:13px;}
+  .cert-info{flex:1;min-width:0;}
+  .cert-name{font-size:.8rem;font-weight:600;color:var(--text);line-height:1.3;}
+  .cert-meta{font-size:.68rem;color:var(--text-tertiary);margin-top:.15rem;}
+
+  /* CTA Section — no card frame */
+  .cta-section{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:1.5rem 2rem 3rem;}
+  .cta-divider{border:none;border-top:1px solid var(--border);margin-bottom:2.5rem;}
+  .cta-inner{text-align:center;}
+  .cta-eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--section-label-color);margin-bottom:1rem;}
+  .cta-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.03em;color:var(--text);margin-bottom:.75rem;line-height:1.1;}
+  .cta-title span{color:var(--blue);}
+  .cta-sub{font-size:.95rem;color:var(--text-secondary);line-height:1.7;max-width:480px;margin:0 auto 2rem;}
+  .cta-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+  .cta-btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:.75rem 2rem;border-radius:8px;font-family:'Inter',sans-serif;font-size:.875rem;font-weight:600;text-decoration:none;transition:all .2s;min-width:200px;cursor:pointer;border:none;}
+  .cta-btn-primary{background:var(--blue);color:#fff;}
+  .cta-btn-primary:hover{opacity:.88;transform:translateY(-2px);box-shadow:0 8px 24px var(--blue-glow);}
+  .cta-btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border);}
+  .cta-btn-secondary:hover{border-color:var(--border-hover);background:var(--blue-glow);color:var(--blue);transform:translateY(-2px);}
+  .cta-btn svg{width:17px;height:17px;flex-shrink:0;}
+
+  /* Toast */
+  .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(0);background:var(--text);color:var(--bg);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;padding:.6rem 1.25rem;border-radius:8px;z-index:500;opacity:0;pointer-events:none;transition:opacity .25s ease;white-space:nowrap;}
+  .toast.show{opacity:1;}
+
+  footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:1.5rem 2rem;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  .footer-left{font-size:.9rem;font-weight:700;color:var(--text);}
+  .footer-left span{color:var(--blue);}
+  .footer-center{display:flex;align-items:center;gap:.6rem;}
+  .footer-right{display:flex;align-items:center;gap:.75rem;font-size:.72rem;color:var(--text-tertiary);}
+  .footer-icon-link{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;transition:all .2s;flex-shrink:0;}
+  .footer-icon-link:hover{border-color:var(--border-hover);color:var(--blue);background:var(--blue-glow);}
+  .footer-icon-link svg{width:13px;height:13px;}
+  #certs{padding-bottom:1.5rem;}
+
+  @media(max-width:900px){
+    .hero-top{grid-template-columns:1fr;gap:1.5rem;}
+    .hero-image-wrap{order:-1;width:100%;max-width:380px;margin:0 auto;}
+    .cases-grid{grid-template-columns:1fr;}
+    .modal-img-pair{grid-template-columns:1fr 1fr;}
+    .stats-wrap{padding:0 1.25rem 1.75rem;}
+  }
+  @media(max-width:640px){
+    .stats-row{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .mobile-break{display:block;}
+    footer{flex-direction:column;align-items:center;text-align:center;gap:.75rem;}
+    .footer-left{order:1;}
+    .footer-center{order:2;}
+    .footer-right{order:3;flex-direction:column;align-items:center;gap:.5rem;}
+    .cta-buttons{flex-direction:column;align-items:center;}
+    .cta-btn{width:100%;max-width:360px;}
+    .modal-metrics{flex-direction:column;}
+    .modal-img-pair{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="ambient"></div><div class="ambient-2"></div>
+
+<nav>
+  <a href="#" class="nav-logo">Erik Sauceda<span>.</span></a>
+  <div class="nav-right">
+    <ul class="nav-links"><li><a href="#work">Work</a></li><li><a href="#skills">Skills</a></li><li><a href="#certs">Certifications</a></li></ul>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+  </div>
+</nav>
+
+<div class="mesh-gradient"></div>
+<div class="mesh-gradient-mid"></div>
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="hero-left">
+      <h1 class="hero-name">Erik Sauceda<span class="outline">Mobile. Growth. Visibility.</span></h1>
+      <p class="hero-tagline"><strong>App Growth Marketer & Solo Founder</strong> specializing in ASO, mobile user acquisition, and AI-powered product marketing.</p>
+      <div class="hero-actions">
+        <a href="mailto:Erikesauceda@gmail.com" class="btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Let's work together</a>
+        <div class="social-links">
+          <a href="mailto:Erikesauceda@gmail.com" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
+          <a href="https://www.linkedin.com/in/erikesauceda" target="_blank" class="social-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-image-wrap">
+      <div class="hero-image-blob"></div>
+      <div class="hero-image-placeholder">
+        <img src="finalmeimage.png" alt="Erik Sauceda — App Growth Marketer"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="stats-wrap">
+  <div class="stats-row">
+    <div class="stat"><div class="stat-number">3M+</div><div class="stat-label">App store impressions driven</div></div>
+    <div class="stat"><div class="stat-number">45%</div><div class="stat-label">Increase in App Store visibility</div></div>
+    <div class="stat"><div class="stat-number">17.4K</div><div class="stat-label">Incremental downloads</div></div>
+  </div>
+</div>
+
+<section id="work" class="reveal">
+  <div class="section-header"><span class="section-label">Selected Work</span><div class="section-line"></div></div>
+  <h2 class="section-title">Case Studies</h2>
+  <p class="section-sub">Growth marketing and ASO work across consumer apps.</p>
+  <div class="cases-grid">
+    <div class="case-card" onclick="openModal('modal-1')">
+      <div class="case-img"><img src="case_studies_placeholder.png" alt="Clapper ASO"/><div class="case-img-text"><div class="case-number">01</div><div class="case-company">Clapper Media Group</div><div class="case-title">App Store Optimization at Scale</div></div></div>
+      <div class="case-body"><p class="case-tagline">Building a repeatable ASO engine for iOS & Android growth in a crowded short-form video market.</p><div class="case-tags"><span class="tag">ASO</span><span class="tag">iOS & Android</span><span class="tag">A/B Testing</span><span class="tag">Keyword Strategy</span></div></div>
+      <div class="case-metrics"><div class="case-metric"><div class="case-metric-value">45%</div><div class="case-metric-label">Visibility lift</div></div><div class="case-metric"><div class="case-metric-value">3M+</div><div class="case-metric-label">Impressions</div></div><div class="case-metric"><div class="case-metric-value">17.4K</div><div class="case-metric-label">Downloads</div></div></div>
+      <button class="case-toggle-btn"><span>View details</span><span class="toggle-icon">+</span></button>
+    </div>
+    <div class="case-card" onclick="openModal('modal-2')">
+      <div class="case-img"><img src="case_studies_placeholder.png" alt="DayGlass"/><div class="case-img-text"><div class="case-number">02</div><div class="case-company">ZenStudios — Solo Project</div><div class="case-title">DayGlass — Dual Platform App Launch</div></div></div>
+      <div class="case-body"><p class="case-tagline">Independently built and launched a consumer journaling app on iOS & Android from zero.</p><div class="case-tags"><span class="tag">Solo Founder</span><span class="tag">Product</span><span class="tag">Go-to-Market</span><span class="tag">In-App Billing</span></div></div>
+      <div class="case-metrics"><div class="case-metric"><div class="case-metric-value">2</div><div class="case-metric-label">Platforms</div></div><div class="case-metric"><div class="case-metric-value">100%</div><div class="case-metric-label">Solo owned</div></div><div class="case-metric"><div class="case-metric-value">0→1</div><div class="case-metric-label">Full build</div></div></div>
+      <button class="case-toggle-btn"><span>View details</span><span class="toggle-icon">+</span></button>
+    </div>
+    <div class="case-card" onclick="openModal('modal-3')">
+      <div class="case-img"><img src="case_studies_placeholder.png" alt="Cita Marketplace"/><div class="case-img-text"><div class="case-number">03</div><div class="case-company">Cita Marketplace</div><div class="case-title">Lifecycle Marketing & User Activation</div></div></div>
+      <div class="case-body"><p class="case-tagline">Driving a 24% activation lift through cross-channel campaign strategy across 40K users.</p><div class="case-tags"><span class="tag">Lifecycle</span><span class="tag">Email & Push</span><span class="tag">Paid Ads</span><span class="tag">CAC Reduction</span></div></div>
+      <div class="case-metrics"><div class="case-metric"><div class="case-metric-value">24%</div><div class="case-metric-label">Activation lift</div></div><div class="case-metric"><div class="case-metric-value">20%</div><div class="case-metric-label">CAC reduction</div></div><div class="case-metric"><div class="case-metric-value">40%</div><div class="case-metric-label">Email retention</div></div></div>
+      <button class="case-toggle-btn"><span>View details</span><span class="toggle-icon">+</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- Modal 1 -->
+<div class="modal-overlay" id="modal-1" onclick="closeModalOutside(event,'modal-1')">
+  <div class="modal">
+    <div class="modal-header"><img src="case_studies_placeholder.png" alt="Clapper ASO"/><button class="modal-close" onclick="closeModal('modal-1')"><svg viewBox="0 0 14 14" fill="none"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg></button><div class="modal-header-text"><div class="modal-num">01</div><div class="modal-company">Clapper Media Group</div><div class="modal-title">App Store Optimization at Scale</div></div></div>
+    <div class="modal-body">
+      <div class="modal-metrics"><div class="modal-metric"><div class="modal-metric-value">45%+</div><div class="modal-metric-label">Visibility increase</div></div><div class="modal-metric"><div class="modal-metric-value">3M+</div><div class="modal-metric-label">Store impressions</div></div><div class="modal-metric"><div class="modal-metric-value">17.4K</div><div class="modal-metric-label">Downloads</div></div></div>
+      <div class="modal-section">
+        <div class="modal-section-label">The Challenge</div>
+        <p class="modal-section-text">Clapper needed to grow organic discoverability in a market dominated by TikTok and Instagram Reels — without a paid acquisition budget. Every download had to be earned through the store.</p>
+        <div class="modal-img-pair">
+          <div class="img-16-9"><img src="case_studies_placeholder.png" alt="Challenge visual 1"/></div>
+          <div class="img-16-9"><img src="case_studies_placeholder.png" alt="Challenge visual 2"/></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">My Approach</div>
+        <p class="modal-section-text">Built a repeatable ASO system from scratch — keyword research and prioritization, metadata optimization across iOS and Android, creative asset strategy (screenshots, videos, icons), regional localization for U.S. and LATAM, and continuous A/B testing. Tracked LTV and retention signals to ensure high-quality user acquisition.</p>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Results</div>
+        <div class="modal-results three-items"><div class="modal-result"><div class="modal-result-value">45%+</div><div class="modal-result-label">App Store visibility</div></div><div class="modal-result"><div class="modal-result-value">3M+</div><div class="modal-result-label">Store impressions</div></div><div class="modal-result"><div class="modal-result-value">17.4K</div><div class="modal-result-label">Incremental downloads</div></div></div>
+        <div class="modal-img-single"><div class="img-16-9"><img src="case_studies_placeholder.png" alt="Results visual"/></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2 -->
+<div class="modal-overlay" id="modal-2" onclick="closeModalOutside(event,'modal-2')">
+  <div class="modal">
+    <div class="modal-header"><img src="case_studies_placeholder.png" alt="DayGlass"/><button class="modal-close" onclick="closeModal('modal-2')"><svg viewBox="0 0 14 14" fill="none"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg></button><div class="modal-header-text"><div class="modal-num">02</div><div class="modal-company">ZenStudios — Solo Project</div><div class="modal-title">DayGlass — Dual Platform App Launch</div></div></div>
+    <div class="modal-body">
+      <div class="modal-metrics"><div class="modal-metric"><div class="modal-metric-value">2</div><div class="modal-metric-label">Platforms launched</div></div><div class="modal-metric"><div class="modal-metric-value">100%</div><div class="modal-metric-label">Solo owned</div></div><div class="modal-metric"><div class="modal-metric-value">0→1</div><div class="modal-metric-label">Full build</div></div></div>
+      <div class="modal-section">
+        <div class="modal-section-label">The Project</div>
+        <p class="modal-section-text">DayGlass is an offline-first journaling app designed for calm, distraction-free writing. Built solo under ZenStudios — I owned every dimension from concept through dual platform launch on Google Play and the iOS App Store.</p>
+        <div class="modal-img-pair">
+          <div class="img-16-9"><img src="case_studies_placeholder.png" alt="DayGlass visual 1"/></div>
+          <div class="img-16-9"><img src="case_studies_placeholder.png" alt="DayGlass visual 2"/></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">What I Owned</div>
+        <p class="modal-section-text">All product decisions, feature prioritization, UX architecture, and visual design. Full ASO strategy for both stores including keyword clustering and metadata optimization. In-app billing — purchase flows, entitlement logic, and freemium-to-paid conversion model. Go-to-market strategy built around organic discoverability from day one.</p>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Key Decisions</div>
+        <p class="modal-section-text">Privacy-first and fully offline by design — no ads, no data collection, no account required. A one-time purchase Pro tier designed to build trust with privacy-conscious users. Distinctive glassmorphic aesthetic to stand out in a crowded journaling category.</p>
+        <div class="modal-img-single"><div class="img-16-9"><img src="case_studies_placeholder.png" alt="DayGlass result visual"/></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 3 -->
+<div class="modal-overlay" id="modal-3" onclick="closeModalOutside(event,'modal-3')">
+  <div class="modal">
+    <div class="modal-header"><img src="case_studies_placeholder.png" alt="Cita Marketplace"/><button class="modal-close" onclick="closeModal('modal-3')"><svg viewBox="0 0 14 14" fill="none"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg></button><div class="modal-header-text"><div class="modal-num">03</div><div class="modal-company">Cita Marketplace</div><div class="modal-title">Lifecycle Marketing & User Activation</div></div></div>
+    <div class="modal-body">
+      <div class="modal-metrics"><div class="modal-metric"><div class="modal-metric-value">24%</div><div class="modal-metric-label">User activation</div></div><div class="modal-metric"><div class="modal-metric-value">20%</div><div class="modal-metric-label">CAC reduction</div></div><div class="modal-metric"><div class="modal-metric-value">40%</div><div class="modal-metric-label">Email retention</div></div></div>
+      <div class="modal-section">
+        <div class="modal-section-label">The Platform</div>
+        <p class="modal-section-text">Cita was a peer-to-peer marketplace for buying and selling reservations at exclusive, hard-to-book dining locations — serving nearly 40,000 users with ~18,000 MAU and 2,100 DAU.</p>
+        <div class="modal-img-pair">
+          <div class="img-16-9"><img src="case_studies_placeholder.png" alt="Cita visual 1"/></div>
+          <div class="img-16-9"><img src="case_studies_placeholder.png" alt="Cita visual 2"/></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">My Approach</div>
+        <p class="modal-section-text">Led lifecycle growth across email, push, SMS, social, and paid channels. Developed segmented campaigns by cuisine interest and booking behavior — targeting last-minute bookers and long-horizon planners separately. Continuous A/B testing across messaging, creative, and timing.</p>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Results</div>
+        <div class="modal-results three-items"><div class="modal-result"><div class="modal-result-value">24%</div><div class="modal-result-label">User activation</div></div><div class="modal-result"><div class="modal-result-value">20%</div><div class="modal-result-label">CAC reduction</div></div><div class="modal-result"><div class="modal-result-value">40%</div><div class="modal-result-label">Email retention</div></div><div class="modal-result"><div class="modal-result-value">&lt;0.1%</div><div class="modal-result-label">Spam rate</div></div></div>
+        <div class="modal-img-single"><div class="img-16-9"><img src="case_studies_placeholder.png" alt="Cita results visual"/></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="skills" class="reveal">
+  <div class="section-header"><span class="section-label">Expertise</span><div class="section-line"></div></div>
+  <h2 class="section-title">Skills</h2>
+  <div class="skills-grid">
+    <div class="skill-group"><div class="skill-group-title">ASO & Store Growth</div><div class="skill-pills"><span class="skill-pill">Keyword Research</span><span class="skill-pill">Metadata Optimization</span><span class="skill-pill">A/B Testing</span><span class="skill-pill">Custom Store Listings</span><span class="skill-pill">App Store Connect</span><span class="skill-pill">Google Play Console</span><span class="skill-pill">Regional Localization</span><span class="skill-pill">AppTweak</span></div></div>
+    <div class="skill-group"><div class="skill-group-title">Growth & Acquisition</div><div class="skill-pills"><span class="skill-pill">Mobile Attribution</span><span class="skill-pill">AppsFlyer</span><span class="skill-pill">Google App Campaigns</span><span class="skill-pill">TikTok Ads</span><span class="skill-pill">Apple Search Ads</span><span class="skill-pill">User Acquisition</span><span class="skill-pill">Market Research</span></div></div>
+    <div class="skill-group"><div class="skill-group-title">AI & Visibility</div><div class="skill-pills"><span class="skill-pill">AEO Strategy</span><span class="skill-pill">AI Feature Marketing</span><span class="skill-pill">Semrush</span><span class="skill-pill">SEO</span><span class="skill-pill">Content Strategy</span><span class="skill-pill">Copywriting</span></div></div>
+    <div class="skill-group"><div class="skill-group-title">Tools & Platforms</div><div class="skill-pills"><span class="skill-pill">Figma</span><span class="skill-pill">GSuite</span><span class="skill-pill">Slack</span><span class="skill-pill">Monday</span><span class="skill-pill">TestFlight</span></div></div>
+  </div>
+</section>
+
+<section id="certs" class="reveal">
+  <div class="section-header"><span class="section-label">Credentials</span><div class="section-line"></div></div>
+  <h2 class="section-title">Certifications</h2>
+  <div class="certs-grid">
+    <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="cert-info"><div class="cert-name">Google Ads: Apps Certification</div><div class="cert-meta">Google · 2026</div></div></div>
+    <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div><div class="cert-info"><div class="cert-name">Apple Ads Certification</div><div class="cert-meta">Apple · 2026</div></div></div>
+    <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><div class="cert-info"><div class="cert-name">AI Visibility Essentials</div><div class="cert-meta">Semrush Academy · 2026</div></div></div>
+    <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div><div class="cert-info"><div class="cert-name">B.A. Design Communication & Digital Media</div><div class="cert-meta">University of North Texas</div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <hr class="cta-divider">
+  <div class="cta-inner">
+    <h2 class="cta-title">Let's Build<br class="mobile-break"> Something <span>Great</span>.</h2>
+    <p class="cta-sub">Whether you need an ASO strategy, a product marketing partner, or someone to help launch your next app — I'd love to hear about your project.</p>
+    <div class="cta-buttons">
+      <button onclick="copyEmail()" class="cta-btn cta-btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Send me an email
+      </button>
+      <a href="https://www.linkedin.com/in/erikesauceda" target="_blank" class="cta-btn cta-btn-secondary">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        Connect on LinkedIn
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Email copied!</div>
+
+<footer>
+  <div class="footer-left">Erik Sauceda<span>.</span></div>
+  <div class="footer-center">
+    <a href="mailto:Erikesauceda@gmail.com" class="footer-icon-link" title="Email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/erikesauceda" target="_blank" class="footer-icon-link" title="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+  </div>
+  <div class="footer-right">App Growth Marketer & Solo Founder · New York, NY</div>
+</footer>
+
+<script>
+  function toggleTheme(){const h=document.documentElement;h.dataset.theme=h.dataset.theme==='dark'?'light':'dark';}
+  function openModal(id){document.getElementById(id).classList.add('visible');document.body.style.overflow='hidden';}
+  function closeModal(id){document.getElementById(id).classList.remove('visible');document.body.style.overflow='';}
+  function closeModalOutside(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-overlay.visible').forEach(m=>m.classList.remove('visible'));document.body.style.overflow='';}});
+  function copyEmail(){
+    navigator.clipboard.writeText('Erikesauceda@gmail.com').then(()=>{
+      const t=document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'),2200);
+    });
+  }
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+  },{threshold:0.08});
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+  // Subtle parallax on hero bg
+  window.addEventListener('scroll',()=>{
+    const bg=document.querySelector('.hero-bg img');
+    if(bg)bg.style.transform=`translateY(${window.scrollY*0.25}px)`;
+  },{passive:true});
+</script>
+</body>
+</html>
