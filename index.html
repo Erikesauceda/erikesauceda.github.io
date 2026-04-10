@@ -80,31 +80,29 @@
   .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(24,25,29,0.55) 0%,rgba(24,25,29,0.82) 50%,var(--bg) 85%);}
   [data-theme="light"] .hero-bg::after{background:linear-gradient(to bottom,rgba(244,246,250,0.45) 0%,rgba(244,246,250,0.8) 50%,var(--bg) 85%);}
 
-  /* Animated mesh orbs — anchored to hero, fade at bottom */
-  .mesh-gradient{position:absolute;top:0;left:0;right:0;height:100%;z-index:0;pointer-events:none;overflow:hidden;}
-  .mesh-gradient::before,.mesh-gradient::after{content:'';position:absolute;border-radius:50%;filter:blur(70px);animation:meshMove 10s ease-in-out infinite alternate;}
-  .mesh-gradient::before{width:550px;height:550px;top:-100px;left:-80px;background:radial-gradient(circle,rgba(59,130,246,0.55) 0%,rgba(37,99,235,0.25) 40%,transparent 70%);animation-delay:0s;}
-  .mesh-gradient::after{width:480px;height:480px;top:-60px;right:-60px;background:radial-gradient(circle,rgba(20,184,166,0.45) 0%,rgba(13,148,136,0.2) 40%,transparent 70%);animation-delay:-4s;}
-  .mesh-gradient-mid{position:absolute;top:60px;left:50%;transform:translateX(-50%);width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(29,78,216,0.35) 0%,rgba(59,130,246,0.15) 50%,transparent 75%);filter:blur(65px);animation:meshMoveMid 14s ease-in-out infinite alternate-reverse;pointer-events:none;z-index:0;}
-  /* Fade orbs out at bottom of hero-wrap */
-  .mesh-gradient::before,.mesh-gradient::after,.mesh-gradient-mid{-webkit-mask-image:linear-gradient(to bottom,black 0%,black 55%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 55%,transparent 100%);}
-  @keyframes meshMove{
-    0%{transform:translate(0,0) scale(1);}
-    33%{transform:translate(50px,-40px) scale(1.1);}
-    66%{transform:translate(-40px,30px) scale(0.95);}
-    100%{transform:translate(30px,50px) scale(1.08);}
+  /* Orbs — soft, stretched, merged with stats section */
+  .hero-wrap{position:relative;overflow:visible;}
+  .orb-container{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .orb{position:absolute;border-radius:50%;filter:blur(120px);}
+  .orb-1{width:800px;height:600px;top:-100px;left:-200px;background:radial-gradient(ellipse at center,rgba(37,99,235,0.4) 0%,rgba(59,130,246,0.15) 45%,transparent 75%);animation:orbFloat1 18s ease-in-out infinite alternate;}
+  .orb-2{width:700px;height:550px;top:-80px;right:-150px;background:radial-gradient(ellipse at center,rgba(13,148,136,0.35) 0%,rgba(20,184,166,0.12) 45%,transparent 75%);animation:orbFloat2 22s ease-in-out infinite alternate;}
+  @keyframes orbFloat1{
+    0%{transform:translate(0,0) scale(1,1);}
+    25%{transform:translate(60px,40px) scale(1.05,0.95);}
+    50%{transform:translate(20px,80px) scale(0.95,1.08);}
+    75%{transform:translate(80px,30px) scale(1.08,0.92);}
+    100%{transform:translate(30px,60px) scale(1,1.05);}
   }
-  @keyframes meshMoveMid{
-    0%{transform:translateX(-50%) scale(1);}
-    50%{transform:translateX(-60%) scale(1.12);}
-    100%{transform:translateX(-40%) scale(0.92);}
+  @keyframes orbFloat2{
+    0%{transform:translate(0,0) scale(1,1);}
+    25%{transform:translate(-70px,50px) scale(0.95,1.06);}
+    50%{transform:translate(-30px,20px) scale(1.06,0.94);}
+    75%{transform:translate(-80px,70px) scale(0.92,1.08);}
+    100%{transform:translate(-40px,30px) scale(1.04,0.98);}
   }
-  [data-theme="light"] .mesh-gradient::before{background:radial-gradient(circle,rgba(59,130,246,0.25) 0%,rgba(37,99,235,0.1) 40%,transparent 70%);}
-  [data-theme="light"] .mesh-gradient::after{background:radial-gradient(circle,rgba(20,184,166,0.18) 0%,transparent 70%);}
-  [data-theme="light"] .mesh-gradient-mid{background:radial-gradient(circle,rgba(29,78,216,0.15) 0%,transparent 75%);}
+  [data-theme="light"] .orb-1{background:radial-gradient(ellipse at center,rgba(37,99,235,0.18) 0%,rgba(59,130,246,0.07) 45%,transparent 75%);}
+  [data-theme="light"] .orb-2{background:radial-gradient(ellipse at center,rgba(13,148,136,0.15) 0%,rgba(20,184,166,0.05) 45%,transparent 75%);}
 
-  /* Hero wrapper — position relative so orbs anchor to it */
-  .hero-wrap{position:relative;overflow:hidden;}
   .hero{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:96px 2rem 1.5rem;}
   .hero-top{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;margin-bottom:1.75rem;}
   .hero-left{}
@@ -309,8 +307,10 @@
 </nav>
 
 <div class="hero-wrap">
-  <div class="mesh-gradient"></div>
-  <div class="mesh-gradient-mid"></div>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
 
   <div class="hero">
     <div class="hero-top">
@@ -326,14 +326,15 @@
       </div>
     </div>
   </div>
-</div>
 
-<div class="stats-wrap">
-  <div class="stats-row">
-    <div class="stat"><div class="stat-number">3M+</div><div class="stat-label">App store impressions driven</div></div>
-    <div class="stat"><div class="stat-number">45%</div><div class="stat-label">Increase in App Store visibility</div></div>
-    <div class="stat"><div class="stat-number">17.4K</div><div class="stat-label">Incremental downloads</div></div>
+  <div class="stats-wrap">
+    <div class="stats-row">
+      <div class="stat"><div class="stat-number">3M+</div><div class="stat-label">App store impressions driven</div></div>
+      <div class="stat"><div class="stat-number">45%</div><div class="stat-label">Increase in App Store visibility</div></div>
+      <div class="stat"><div class="stat-number">17.4K</div><div class="stat-label">Incremental downloads</div></div>
+    </div>
   </div>
+
 </div>
 
 <section id="work" class="reveal">
