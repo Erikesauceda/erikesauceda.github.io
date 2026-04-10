@@ -80,12 +80,14 @@
   .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(24,25,29,0.55) 0%,rgba(24,25,29,0.82) 50%,var(--bg) 85%);}
   [data-theme="light"] .hero-bg::after{background:linear-gradient(to bottom,rgba(244,246,250,0.45) 0%,rgba(244,246,250,0.8) 50%,var(--bg) 85%);}
 
-  /* Animated mesh orbs — anchored to hero, not fixed */
+  /* Animated mesh orbs — anchored to hero, fade at bottom */
   .mesh-gradient{position:absolute;top:0;left:0;right:0;height:100%;z-index:0;pointer-events:none;overflow:hidden;}
   .mesh-gradient::before,.mesh-gradient::after{content:'';position:absolute;border-radius:50%;filter:blur(70px);animation:meshMove 10s ease-in-out infinite alternate;}
   .mesh-gradient::before{width:550px;height:550px;top:-100px;left:-80px;background:radial-gradient(circle,rgba(59,130,246,0.55) 0%,rgba(37,99,235,0.25) 40%,transparent 70%);animation-delay:0s;}
-  .mesh-gradient::after{width:480px;height:480px;top:-60px;right:-60px;background:radial-gradient(circle,rgba(96,165,250,0.45) 0%,rgba(147,197,253,0.2) 40%,transparent 70%);animation-delay:-4s;}
+  .mesh-gradient::after{width:480px;height:480px;top:-60px;right:-60px;background:radial-gradient(circle,rgba(20,184,166,0.45) 0%,rgba(13,148,136,0.2) 40%,transparent 70%);animation-delay:-4s;}
   .mesh-gradient-mid{position:absolute;top:60px;left:50%;transform:translateX(-50%);width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(29,78,216,0.35) 0%,rgba(59,130,246,0.15) 50%,transparent 75%);filter:blur(65px);animation:meshMoveMid 14s ease-in-out infinite alternate-reverse;pointer-events:none;z-index:0;}
+  /* Fade orbs out at bottom of hero-wrap */
+  .mesh-gradient::before,.mesh-gradient::after,.mesh-gradient-mid{-webkit-mask-image:linear-gradient(to bottom,black 0%,black 55%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 55%,transparent 100%);}
   @keyframes meshMove{
     0%{transform:translate(0,0) scale(1);}
     33%{transform:translate(50px,-40px) scale(1.1);}
@@ -98,7 +100,7 @@
     100%{transform:translateX(-40%) scale(0.92);}
   }
   [data-theme="light"] .mesh-gradient::before{background:radial-gradient(circle,rgba(59,130,246,0.25) 0%,rgba(37,99,235,0.1) 40%,transparent 70%);}
-  [data-theme="light"] .mesh-gradient::after{background:radial-gradient(circle,rgba(96,165,250,0.2) 0%,transparent 70%);}
+  [data-theme="light"] .mesh-gradient::after{background:radial-gradient(circle,rgba(20,184,166,0.18) 0%,transparent 70%);}
   [data-theme="light"] .mesh-gradient-mid{background:radial-gradient(circle,rgba(29,78,216,0.15) 0%,transparent 75%);}
 
   /* Hero wrapper — position relative so orbs anchor to it */
@@ -267,8 +269,8 @@
   footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:1.5rem 2rem;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
   .footer-left{font-size:.9rem;font-weight:700;color:var(--text);}
   .footer-left span{color:var(--blue);}
-  .footer-center{display:flex;align-items:center;gap:.6rem;}
   .footer-right{display:flex;align-items:center;gap:.75rem;font-size:.72rem;color:var(--text-tertiary);}
+  .footer-center{display:none;}
   .footer-icon-link{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;transition:all .2s;flex-shrink:0;}
   .footer-icon-link:hover{border-color:var(--border-hover);color:var(--blue);background:var(--blue-glow);}
   .footer-icon-link svg{width:13px;height:13px;}
@@ -287,8 +289,7 @@
     .mobile-break{display:block;}
     footer{flex-direction:column;align-items:center;text-align:center;gap:.75rem;}
     .footer-left{order:1;}
-    .footer-center{order:2;}
-    .footer-right{order:3;flex-direction:column;align-items:center;gap:.5rem;}
+    .footer-right{order:2;flex-direction:column;align-items:center;gap:.5rem;}
     .cta-buttons{flex-direction:column;align-items:center;}
     .cta-btn{width:100%;max-width:360px;}
     .modal-metrics{flex-direction:column;}
@@ -487,7 +488,8 @@
 
 <footer>
   <div class="footer-left">Erik Sauceda<span>.</span></div>
-  <div class="footer-center">
+  <div class="footer-right">
+    App Growth Marketer & Solo Founder · New York, NY
     <button onclick="copyEmail()" class="footer-icon-link" title="Copy email" style="cursor:pointer;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
     </button>
@@ -495,7 +497,6 @@
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
     </a>
   </div>
-  <div class="footer-right">App Growth Marketer & Solo Founder · New York, NY</div>
 </footer>
 
 <script>
