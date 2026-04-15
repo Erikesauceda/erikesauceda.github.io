@@ -43,22 +43,23 @@
     --border-hover:rgba(37,99,235,0.5);
     --text:#0D1320;--text-secondary:#3D4E66;--text-tertiary:#64748B;
     --card-bg:#FFFFFF;--nav-bg:rgba(244,246,250,0.92);
-    --blue:var(--blue-light);
+    --blue:#3B6EE8;
     --blue-glow:var(--blue-glow-light);
     --blue-border:var(--blue-border-light);
-    --tag-bg:rgba(37,99,235,0.11);
-    --tag-color:#1A46C0;
-    --tag-border:rgba(37,99,235,0.2);
-    --stat-color:#1A46C0;
-    --metric-color:#1A46C0;
-    --section-label-color:#1D56D8;
-    --skill-title-color:#1D56D8;
+    --tag-bg:rgba(59,110,232,0.1);
+    --tag-color:#3B6EE8;
+    --tag-border:rgba(59,110,232,0.2);
+    --stat-color:#3B6EE8;
+    --metric-color:#3B6EE8;
+    --section-label-color:#3B6EE8;
+    --skill-title-color:#3B6EE8;
     --skill-pill-bg:#E8EDF7;
-    --skill-pill-border:rgba(37,99,235,0.18);
+    --skill-pill-border:rgba(59,110,232,0.18);
     --skill-pill-text:#2D3E6B;
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
+  html,body{max-width:100%;overflow-x:hidden;}
   body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
   .ambient{position:fixed;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(96,165,250,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;top:-300px;right:-200px;}
   .ambient-2{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(96,165,250,0.03) 0%,transparent 70%);pointer-events:none;z-index:0;bottom:0;left:-150px;}
@@ -74,51 +75,17 @@
   .theme-toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:var(--blue);top:2px;left:2px;transition:transform .3s;}
   [data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 
-  /* Hero bg image with fade */
-  .hero-bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
-  .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
-  .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(24,25,29,0.55) 0%,rgba(24,25,29,0.82) 50%,var(--bg) 85%);}
-  [data-theme="light"] .hero-bg::after{background:linear-gradient(to bottom,rgba(244,246,250,0.45) 0%,rgba(244,246,250,0.8) 50%,var(--bg) 85%);}
-
-  /* Orbs — no clipping, obvious movement, all blue hues */
-  .hero-wrap{position:relative;}
-  .orb-container{position:absolute;top:0;left:0;right:0;bottom:-200px;pointer-events:none;z-index:0;}
-  .orb{position:absolute;border-radius:50%;filter:blur(100px);will-change:transform;}
-  .orb-1{
-    width:900px;height:650px;
-    top:-150px;left:-250px;
-    background:radial-gradient(ellipse at center,rgba(37,99,235,0.5) 0%,rgba(59,130,246,0.2) 40%,transparent 72%);
-    animation:orbFloat1 12s ease-in-out infinite alternate;
-  }
-  .orb-2{
-    width:750px;height:600px;
-    top:-100px;right:-200px;
-    background:radial-gradient(ellipse at center,rgba(96,165,250,0.45) 0%,rgba(147,197,253,0.18) 40%,transparent 72%);
-    animation:orbFloat2 15s ease-in-out infinite alternate;
-  }
-  @keyframes orbFloat1{
-    0%  {transform:translate(0px,   0px)   scaleX(1)    scaleY(1);}
-    25% {transform:translate(120px, 80px)  scaleX(1.12) scaleY(0.88);}
-    50% {transform:translate(60px,  160px) scaleX(0.9)  scaleY(1.15);}
-    75% {transform:translate(180px, 60px)  scaleX(1.08) scaleY(0.92);}
-    100%{transform:translate(80px,  120px) scaleX(0.95) scaleY(1.1);}
-  }
-  @keyframes orbFloat2{
-    0%  {transform:translate(0px,    0px)   scaleX(1)    scaleY(1);}
-    25% {transform:translate(-140px, 100px) scaleX(0.88) scaleY(1.14);}
-    50% {transform:translate(-60px,  60px)  scaleX(1.1)  scaleY(0.9);}
-    75% {transform:translate(-160px, 140px) scaleX(0.92) scaleY(1.1);}
-    100%{transform:translate(-90px,  80px)  scaleX(1.06) scaleY(0.96);}
-  }
-  [data-theme="light"] .orb-1{background:radial-gradient(ellipse at center,rgba(37,99,235,0.2) 0%,rgba(59,130,246,0.08) 40%,transparent 72%);}
-  [data-theme="light"] .orb-2{background:radial-gradient(ellipse at center,rgba(96,165,250,0.18) 0%,rgba(147,197,253,0.07) 40%,transparent 72%);}
+  /* ambient background divs kept for subtle texture */
+  /* Canvas orbs — no CSS blur, no GPU hit */
+  .hero-wrap{position:relative;overflow:hidden;}
+  #orb-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
 
   .hero{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:96px 2rem 1.5rem;}
   .hero-top{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;margin-bottom:1.75rem;}
   .hero-left{}
   .hero-name{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:800;line-height:1;letter-spacing:-.03em;color:var(--text);margin-bottom:1.25rem;}
   .hero-name .outline{display:block;color:var(--blue);}
-  [data-theme="light"] .hero-name .outline{color:var(--blue-light);}
+  [data-theme="light"] .hero-name .outline{color:#3B6EE8;}
   .hero-tagline{font-size:.9rem;color:var(--text-secondary);line-height:1.75;margin-bottom:1.25rem;}
   .hero-tagline strong{color:var(--text);font-weight:600;}
   .hero-actions{display:flex;align-items:center;gap:.75rem;}
@@ -145,7 +112,7 @@
   .stat:last-child{border-right:none;}
   .stat:hover{background:transparent;}
   .stat-number{font-size:2rem;font-weight:800;color:var(--stat-color);letter-spacing:-.03em;line-height:1;margin-bottom:.3rem;text-shadow:0 0 20px rgba(96,165,250,0.5),0 0 40px rgba(96,165,250,0.2);}
-  [data-theme="light"] .stat-number{text-shadow:0 0 16px rgba(37,99,235,0.3),0 0 32px rgba(37,99,235,0.12);}
+  [data-theme="light"] .stat-number{text-shadow:0 0 16px rgba(59,110,232,0.3),0 0 32px rgba(59,110,232,0.12);}
   .stat-label{font-size:.72rem;color:var(--text-tertiary);}
 
   /* Scroll reveal */
@@ -197,10 +164,10 @@
   .toggle-icon{font-size:1.1rem;font-weight:300;line-height:1;flex-shrink:0;}
 
   /* Modal */
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .25s ease;backdrop-filter:blur(6px);}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity .2s ease;backdrop-filter:blur(6px);}
   .modal-overlay.visible{opacity:1;pointer-events:all;}
-  .modal{background:var(--card-bg);border:1px solid var(--blue-border);border-radius:16px;width:100%;max-width:720px;max-height:88vh;overflow-y:auto;transform:translateY(20px) scale(.97);transition:transform .3s ease;box-shadow:0 32px 80px rgba(0,0,0,.5);}
-  .modal-overlay.visible .modal{transform:translateY(0) scale(1);}
+  .modal{background:var(--card-bg);border:1px solid var(--blue-border);border-radius:16px 16px 0 0;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;overflow-x:hidden;transform:translateY(40px);transition:transform .25s ease;box-shadow:0 -8px 40px rgba(0,0,0,.4);}
+  .modal-overlay.visible .modal{transform:translateY(0);}
   .modal-header{position:relative;height:200px;overflow:hidden;border-radius:16px 16px 0 0;flex-shrink:0;}
   .modal-header img{width:100%;height:100%;object-fit:cover;}
   .modal-header::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,rgba(0,0,0,.7) 100%);}
@@ -292,6 +259,7 @@
     .stats-wrap{padding:0 1.25rem 1.75rem;}
   }
   @media(max-width:640px){
+    *{max-width:100%;}
     .stats-row{grid-template-columns:1fr;}
     .nav-links{display:none;}
     .mobile-break{display:block;}
@@ -302,6 +270,15 @@
     .cta-btn{width:100%;max-width:360px;}
     .modal-metrics{flex-direction:column;}
     .modal-img-pair{grid-template-columns:1fr;}
+    .modal-body{padding:1.25rem;}
+    .modal-header{height:160px;}
+    .modal-results{grid-template-columns:1fr 1fr;}
+    .cases-grid{grid-template-columns:1fr;}
+    section{padding:2rem 1rem;}
+    .hero{padding:80px 1rem 1rem;}
+    .stats-wrap{padding:0 1rem 1.5rem;}
+    .cta-section{padding:1rem 1rem 2rem;}
+    footer{padding:1.25rem 1rem;}
   }
 </style>
 </head>
@@ -317,10 +294,7 @@
 </nav>
 
 <div class="hero-wrap">
-  <div class="orb-container">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-  </div>
+  <canvas id="orb-canvas"></canvas>
 
   <div class="hero">
     <div class="hero-top">
@@ -528,11 +502,74 @@
     entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
   },{threshold:0.08});
   document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-  // Subtle parallax on hero bg
-  window.addEventListener('scroll',()=>{
-    const bg=document.querySelector('.hero-bg img');
-    if(bg)bg.style.transform=`translateY(${window.scrollY*0.25}px)`;
-  },{passive:true});
+
+  // Canvas orbs — smooth, GPU-friendly, no CSS blur
+  const canvas = document.getElementById('orb-canvas');
+  const ctx = canvas.getContext('2d');
+  const wrap = canvas.parentElement;
+
+  function resizeCanvas(){
+    canvas.width = wrap.offsetWidth;
+    canvas.height = wrap.offsetHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas, {passive:true});
+
+  const isDark = () => document.documentElement.dataset.theme !== 'light';
+
+  // Two orbs with independent sine-wave paths
+  const orbs = [
+    {
+      baseX: 0.18, baseY: 0.35,
+      ax: 0.22, ay: 0.18,
+      fx: 0.00042, fy: 0.00031,
+      px: 0, py: 1.2,
+      r: 0.52,
+      colorDark:  [[29,78,216,0.42],[59,130,246,0.18],[96,165,250,0]],
+      colorLight: [[29,78,216,0.14],[59,130,246,0.06],[96,165,250,0]]
+    },
+    {
+      baseX: 0.82, baseY: 0.3,
+      ax: 0.2, ay: 0.16,
+      fx: 0.00035, fy: 0.00028,
+      px: 2.1, py: 0.5,
+      r: 0.46,
+      colorDark:  [[96,165,250,0.38],[147,197,253,0.15],[191,219,254,0]],
+      colorLight: [[96,165,250,0.12],[147,197,253,0.05],[191,219,254,0]]
+    }
+  ];
+
+  function drawOrb(orb, t){
+    const w = canvas.width, h = canvas.height;
+    const x = (orb.baseX + Math.sin(t * orb.fx + orb.px) * orb.ax) * w;
+    const y = (orb.baseY + Math.sin(t * orb.fy + orb.py) * orb.ay) * h;
+    const r = orb.r * Math.min(w, h);
+    const stops = isDark() ? orb.colorDark : orb.colorLight;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    stops.forEach(([r2,g2,b2,a], i) => {
+      g.addColorStop(i === 0 ? 0 : i === 1 ? 0.45 : 1,
+        `rgba(${r2},${g2},${b2},${a})`);
+    });
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+  }
+
+  let running = true;
+  function loop(t){
+    if(!running) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    orbs.forEach(o => drawOrb(o, t));
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // Pause when tab hidden to save battery
+  document.addEventListener('visibilitychange', () => {
+    running = !document.hidden;
+    if(running) requestAnimationFrame(loop);
+  });
 </script>
 </body>
 </html>
